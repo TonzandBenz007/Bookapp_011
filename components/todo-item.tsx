@@ -1,17 +1,33 @@
 "use client";
 
+import { useState } from "react";
 import type { Todo } from "@/types/todo";
 
 type TodoItemProps = {
   todo: Todo;
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
+  onRename: (id: string, newTask: string) => void;
 };
 
-export default function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
+export default function TodoItem({ todo, onToggle, onDelete, onRename }: TodoItemProps) {
+  // isEditing/draftText อยู่ที่นี่ ไม่ใช่ page.tsx เพราะเป็น UI state ชั่วคราวของแถวนี้แถวเดียว
+  // (ไม่มีผลต่อข้อมูล todos จริงจนกว่าจะ save) ต่างจาก is_complete/task ที่เป็นข้อมูลจริงที่ทุก
+  // component ต้องเห็นตรงกัน จึงต้องอยู่ parent เดียว
+  const [isEditing, setIsEditing] = useState(false);
+  const [draftText, setDraftText] = useState(todo.task);
+
+  function saveEdit() {
+    const trimmed = draftText.trim();
+    if (trimmed !== "" && trimmed !== todo.task) {
+      onRename(todo.id, trimmed);
+    }
+    setIsEditing(false);
+  }
+
   return (
     <div className="group flex items-center justify-between gap-3 rounded-xl bg-white p-4 shadow-sm">
-      <div className="flex items-center gap-3">
+      <div className="flex flex-1 items-center gap-3">
         <button
           type="button"
           onClick={() => onToggle(todo.id)}
@@ -31,9 +47,26 @@ export default function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
             </svg>
           )}
         </button>
-        <span className={todo.is_complete ? "text-gray-400 line-through" : "text-gray-700"}>
-          {todo.task}
-        </span>
+        {isEditing ? (
+          <input
+            type="text"
+            value={draftText}
+            onChange={(e) => setDraftText(e.target.value)}
+            autoFocus
+            onBlur={saveEdit}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") saveEdit();
+            }}
+            className="flex-1 rounded-lg border border-gray-200 px-2 py-1 text-gray-700 outline-none focus:border-blue-500"
+          />
+        ) : (
+          <span
+            onDoubleClick={() => setIsEditing(true)}
+            className={todo.is_complete ? "text-gray-400 line-through" : "text-gray-700"}
+          >
+            {todo.task}
+          </span>
+        )}
       </div>
       <div className="flex shrink-0 items-center gap-2">
         <span

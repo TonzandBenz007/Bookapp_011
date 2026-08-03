@@ -6,9 +6,10 @@ type TodoListProps = {
   todos: Todo[];
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
+  onRename: (id: string, newTask: string) => void;
 };
 
-export default function TodoList({ todos, onToggle, onDelete }: TodoListProps) {
+export default function TodoList({ todos, onToggle, onDelete, onRename }: TodoListProps) {
   if (todos.length === 0) {
     return <EmptyState />;
   }
@@ -16,7 +17,13 @@ export default function TodoList({ todos, onToggle, onDelete }: TodoListProps) {
   return (
     <div className="flex flex-col gap-3">
       {todos.map((todo) => (
-        <TodoItem key={todo.id} todo={todo} onToggle={onToggle} onDelete={onDelete} />
+        <TodoItem
+          key={todo.id}
+          todo={todo}
+          onToggle={onToggle}
+          onDelete={onDelete}
+          onRename={onRename}
+        />
       ))}
     </div>
   );
