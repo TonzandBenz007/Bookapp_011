@@ -1,13 +1,9 @@
 import TodoItem from "./todo-item";
 import EmptyState from "./empty-state";
-
-type TodoListItem = {
-  task: string;
-  isComplete: boolean;
-};
+import type { Todo } from "@/types/todo";
 
 type TodoListProps = {
-  todos: TodoListItem[];
+  todos: Todo[];
 };
 
 export default function TodoList({ todos }: TodoListProps) {
@@ -17,8 +13,8 @@ export default function TodoList({ todos }: TodoListProps) {
 
   return (
     <div className="flex flex-col gap-3">
-      {todos.map((todo, index) => (
-        <TodoItem key={index} task={todo.task} isComplete={todo.isComplete} />
+      {todos.map((todo) => (
+        <TodoItem key={todo.id} todo={todo} />
       ))}
     </div>
   );
