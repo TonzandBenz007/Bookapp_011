@@ -22,11 +22,21 @@ export default function Home() {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
   }
 
+  function handleAdd(task: string) {
+    const newTodo: Todo = {
+      id: crypto.randomUUID(),
+      task,
+      is_complete: false,
+      created_at: new Date().toISOString(),
+    };
+    setTodos((prev) => [newTodo, ...prev]);
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-10">
       <main className="mx-auto flex w-full max-w-xl flex-col gap-6 px-4">
         <AppHeader />
-        <AddTodoForm />
+        <AddTodoForm onAdd={handleAdd} />
         <TodoList todos={todos} onToggle={handleToggle} onDelete={handleDelete} />
       </main>
     </div>
