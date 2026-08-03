@@ -9,7 +9,7 @@ type AddTodoFormProps = {
 export default function AddTodoForm({ onAdd }: AddTodoFormProps) {
   const [task, setTask] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     if (task.trim() === "") return;
     onAdd(task);
