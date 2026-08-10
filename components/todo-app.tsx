@@ -4,7 +4,7 @@ import { useState } from "react";
 import AppHeader from "@/components/app-header";
 import AddTodoForm from "@/components/add-todo-form";
 import TodoList from "@/components/todo-list";
-import { addTodo } from "@/app/actions";
+import { addTodo, toggleTodo, renameTodo, deleteTodo } from "@/app/actions";
 import type { Todo } from "@/types/todo";
 
 type TodoAppProps = {
@@ -14,15 +14,16 @@ type TodoAppProps = {
 export default function TodoApp({ initialTodos }: TodoAppProps) {
   const [todos, setTodos] = useState<Todo[]>(initialTodos);
 
-  function handleToggle(id: string) {
-    setTodos((prev) =>
-      prev.map((todo) =>
-        todo.id === id ? { ...todo, is_complete: !todo.is_complete } : todo
-      )
-    );
+  async function handleToggle(id: string) {
+    const current = todos.find((todo) => todo.id === id);
+    if (!current) return;
+
+    const updated = await toggleTodo(id, !current.is_complete);
+    setTodos((prev) => prev.map((todo) => (todo.id === id ? updated : todo)));
   }
 
-  function handleDelete(id: string) {
+  async function handleDelete(id: string) {
+    await deleteTodo(id);
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
   }
 
@@ -31,10 +32,9 @@ export default function TodoApp({ initialTodos }: TodoAppProps) {
     setTodos((prev) => [newTodo, ...prev]);
   }
 
-  function handleRename(id: string, newTask: string) {
-    setTodos((prev) =>
-      prev.map((todo) => (todo.id === id ? { ...todo, task: newTask } : todo))
-    );
+  async function handleRename(id: string, newTask: string) {
+    const updated = await renameTodo(id, newTask);
+    setTodos((prev) => prev.map((todo) => (todo.id === id ? updated : todo)));
   }
 
   return (
