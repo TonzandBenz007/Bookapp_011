@@ -4,6 +4,7 @@ import { useState } from "react";
 import AppHeader from "@/components/app-header";
 import AddTodoForm from "@/components/add-todo-form";
 import TodoList from "@/components/todo-list";
+import { addTodo } from "@/app/actions";
 import type { Todo } from "@/types/todo";
 
 type TodoAppProps = {
@@ -25,13 +26,8 @@ export default function TodoApp({ initialTodos }: TodoAppProps) {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
   }
 
-  function handleAdd(task: string) {
-    const newTodo: Todo = {
-      id: crypto.randomUUID(),
-      task,
-      is_complete: false,
-      created_at: new Date().toISOString(),
-    };
+  async function handleAdd(task: string) {
+    const newTodo = await addTodo(task);
     setTodos((prev) => [newTodo, ...prev]);
   }
 
