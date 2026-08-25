@@ -27,13 +27,13 @@ export default function TodoApp({ initialTodos }: TodoAppProps) {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
   }
 
-  async function handleAdd(task: string) {
-    const newTodo = await addTodo(task);
+  async function handleAdd(task: string, year?: number | null) {
+    const newTodo = await addTodo(task, year);
     setTodos((prev) => [newTodo, ...prev]);
   }
 
-  async function handleRename(id: string, newTask: string) {
-    const updated = await renameTodo(id, newTask);
+  async function handleRename(id: string, newTask: string, newYear?: number | null) {
+    const updated = await renameTodo(id, newTask, newYear);
     setTodos((prev) => prev.map((todo) => (todo.id === id ? updated : todo)));
   }
 

@@ -6,7 +6,7 @@ type TodoListProps = {
   todos: Todo[];
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
-  onRename: (id: string, newTask: string) => void;
+  onRename: (id: string, newTask: string, newYear?: number | null) => void;
 };
 
 export default function TodoList({ todos, onToggle, onDelete, onRename }: TodoListProps) {
